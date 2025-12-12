@@ -24,8 +24,8 @@ vector<int> adj[N];
 int dis[N];
 
 void BFS(int src) {
-    // safer initialization: fill with OO
-    fill(dis, dis + n, OO);   // فقط عناصر 0..n-1
+
+    fill(dis, dis + n, OO);   
     queue<int> q;
     dis[src] = 0;
     q.push(src);
