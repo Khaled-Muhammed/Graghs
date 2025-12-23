@@ -17,48 +17,56 @@ int dx[4] = {0, 0, 1, -1};
 int dy[4] = {1, -1, 0, 0};
 int dx_all[8] = { 1, 0, -1, 0, 1, 1, -1, -1 };
 int dy_all[8] = { 0, 1, 0, -1, -1, 1, -1, 1 };
-const int N = 1e5 + 5, M = 2e5 + 5, OO = 0x3f3f3f3f;
+const int N = 1000 + 5, M = 2e5 + 5, OO = 0x3f3f3f3f;
 
 int n, m;
-vector<int> adj[N];
-int dis[N];
+vector<vector<int>> graph;
+vector<int> vis, levels, traversal;
 
-void BFS(int src) {
-
-    fill(dis, dis + n, OO);   
+void bfs(int start){
     queue<int> q;
-    dis[src] = 0;
-    q.push(src);
 
-    while (!q.empty()) {
-        int u = q.front(); q.pop();
-        for (int v : adj[u]) {
-            if (dis[v] == OO) {
-                dis[v] = dis[u] + 1;
-                q.push(v);
+    q.push(start);
+    vis[start] = 1;
+    levels[start] = 0;
+
+    while(!q.empty()){
+        int cur = q.front();
+        q.pop();
+
+        traversal.push_back(cur);
+
+        for(auto ch : graph[cur]){
+            if(!vis[ch]){
+                q.push(ch);
+                vis[ch] = 1;
+                levels[ch] = levels[cur] + 1;
             }
         }
     }
 }
-
 void TheManWhoNeverGivesUp() {
 
     cin >> n >> m;
-    for (int i = 0; i < n; ++i) adj[i].clear();
 
-    for (int i = 0; i < m; ++i) {
-        int u, v; cin >> u >> v;
-        adj[u].push_back(v);
-        adj[v].push_back(u);
+    graph.resize(n + 1);
+    vis.resize(n + 1);
+    levels.resize(n + 1);
+
+    for(int i = 0; i < m; ++i){
+        int u, v;
+        cin >> u >> v;
+        graph[u].push_back(v);
+        graph[v].push_back(u);
     }
 
-    BFS(0);
+    bfs(1);
 
-    for (int u = 0; u < n; ++u) {
-        cout << u << ' ' << dis[u] << '\n';
+    for(auto i : traversal){
+        cout << i << " ";
     }
 }
-signed main() {
+signed main(){
 
 //    std::freopen("longpath.in", "r", stdin);
 //    std::freopen("longpath.out", "w", stdout);
@@ -76,31 +84,19 @@ signed main() {
         TheManWhoNeverGivesUp();
     }
 }
-/*
-Input
-9 13
-0 1
-0 2
-0 3
-0 7
-1 6
-2 6
-3 5
-7 8
-7 6
-6 4
-5 6
-5 8
-6 8
 
-Output
-0 0
-1 1
-2 1
-3 1
-4 3
-5 2
-6 2
-7 1
-8 2
+/*
+intput
+9 8
+1 2
+1 3
+2 4
+2 5
+3 6
+6 9
+5 7
+5 8
+
+output
+1 2 3 4 5 6 7 8 9 
 */
